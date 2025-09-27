@@ -10,7 +10,7 @@ document.getElementById('prediction-form').addEventListener('submit', async func
   }
 
   try {
-    const res = await fetch('/predict', {
+    const res = await fetch('https://backend-repo-mxh4.onrender.com/predict', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ticker, date })

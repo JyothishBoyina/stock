@@ -9,7 +9,7 @@ import numpy as np
 import os
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
-CORS(app)
+CORS(app, origins=["https://frontend-repo-git-main-jyothishboyinas-projects.vercel.app"])
 
 # Load model and scaler once at startup
 model = load_trained_model()
