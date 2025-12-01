@@ -11,7 +11,7 @@ import os
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 CORS(app, origins=["https://frontend-repo-git-main-jyothishboyinas-projects.vercel.app"])
 
-# Load model and scaler once at startup
+# Load model and scaler once at startup<link rel="stylesheet" href="static/style.css">
 model = load_trained_model()
 scaler = load_scaler()
 
