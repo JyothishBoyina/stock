@@ -1,5 +1,5 @@
-# Use a lightweight Python image
-FROM python:3.9-slim
+# Use a Python 3.10+ image to support modern type hinting (|) used by dependencies
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
