@@ -143,9 +143,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-# Model files
-*.h5
-*.pkl
-backend/*.h5
-backend/*.pkl

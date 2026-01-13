@@ -23,5 +23,5 @@ ENV PYTHONUNBUFFERED=1
 # Expose the port Flask runs on
 EXPOSE 5000
 
-# Command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "backend.app:app"]
+# Command to run the application using the PORT environment variable
+CMD gunicorn --bind 0.0.0.0:${PORT:-5000} backend.app:app
