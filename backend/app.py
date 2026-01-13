@@ -2,18 +2,22 @@
 
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from utils import fetch_stock_data, create_sequences
+from .utils import fetch_stock_data, create_sequences
 # Imports moved inside try-except for Demo Mode compatibility
 import pandas as pd
 import numpy as np
 import os
 
-app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+template_dir = os.path.join(BASE_DIR, '..', 'frontend', 'templates')
+static_dir = os.path.join(BASE_DIR, '..', 'frontend', 'static')
+
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 CORS(app, origins=["https://frontend-repo-git-main-jyothishboyinas-projects.vercel.app"])
 
 # Load model and scaler once at startup
 try:
-    from lstm_model import load_trained_model, load_scaler, predict_future_price
+    from .lstm_model import load_trained_model, load_scaler, predict_future_price
     model = load_trained_model()
     scaler = load_scaler()
     DEMO_MODE = False
@@ -33,7 +37,7 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     if not DEMO_MODE:
-        from lstm_model import predict_future_price # Local import just in case
+        from .lstm_model import predict_future_price # Local import just in case
     data = request.get_json()
     ticker = data.get('ticker')
     target_date = data.get('date')

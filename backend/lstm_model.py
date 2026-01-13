@@ -6,9 +6,10 @@ import joblib
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 
-# ✅ FIXED paths — assumes files are in backend/
-MODEL_PATH = 'model.h5'
-SCALER_PATH = 'scaler.pkl'
+# ✅ FIXED paths — relative to this script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, 'model.h5')
+SCALER_PATH = os.path.join(BASE_DIR, 'scaler.pkl')
 
 def build_model(input_shape):
     model = Sequential()
