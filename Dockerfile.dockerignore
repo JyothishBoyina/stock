@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.git/
+.vscode/
+venv/
+node_modules/
+.DS_Store
+model.h5
+scaler.pkl
+backend/model.h5
+backend/scaler.pkl

@@ -3,7 +3,7 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from utils import fetch_stock_data, create_sequences
-from lstm_model import load_trained_model, load_scaler, predict_future_price
+# Imports moved inside try-except for Demo Mode compatibility
 import pandas as pd
 import numpy as np
 import os
@@ -11,9 +11,18 @@ import os
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 CORS(app, origins=["https://frontend-repo-git-main-jyothishboyinas-projects.vercel.app"])
 
-# Load model and scaler once at startup<link rel="stylesheet" href="static/style.css">
-model = load_trained_model()
-scaler = load_scaler()
+# Load model and scaler once at startup
+try:
+    from lstm_model import load_trained_model, load_scaler, predict_future_price
+    model = load_trained_model()
+    scaler = load_scaler()
+    DEMO_MODE = False
+    print("✅ Model and scaler loaded successfully.")
+except Exception as e:
+    print(f"⚠️ Warning: Could not load model or scaler ({e}). Running in DEMO MODE with mock data.")
+    model = None
+    scaler = None
+    DEMO_MODE = True
 
 # Serve frontend
 @app.route('/')
@@ -23,6 +32,8 @@ def home():
 # Prediction API
 @app.route('/predict', methods=['POST'])
 def predict():
+    if not DEMO_MODE:
+        from lstm_model import predict_future_price # Local import just in case
     data = request.get_json()
     ticker = data.get('ticker')
     target_date = data.get('date')
@@ -45,11 +56,16 @@ def predict():
                 return jsonify({'error': f'Missing column: {col}'}), 400
 
         # Preprocess and predict
-        features = df[required_cols].values
-        scaled = scaler.transform(features)
-        x_input = create_sequences(scaled)[-1:]
-        predicted_scaled = predict_future_price(model, x_input)
-        predicted_price = scaler.inverse_transform([[predicted_scaled, 0, 0]])[0][0]
+        if DEMO_MODE:
+            # Mock prediction for Demo Mode
+            last_close = df['Close'].iloc[-1].item()
+            predicted_price = last_close * (1 + (np.random.uniform(-0.05, 0.05)))
+        else:
+            features = df[required_cols].values
+            scaled = scaler.transform(features)
+            x_input = create_sequences(scaled)[-1:]
+            predicted_scaled = predict_future_price(model, x_input)
+            predicted_price = scaler.inverse_transform([[predicted_scaled, 0, 0]])[0][0]
 
         # Safely extract last close
         # ✅ Fixed line
